@@ -1,143 +1,86 @@
-# Campus Placement System
+# College Placement System
 
-A full-stack web application connecting students with campus recruiters, built with **Spring Boot 3.3** and **Vanilla JS**.
-
----
-
-## Features
-
-| Role | Capabilities |
-|------|-------------|
-| **Student** | Browse/search jobs, apply with resume, track application status |
-| **Recruiter** | Post/edit/delete jobs, view applicants, update application status |
-| **Admin** | View all users and jobs, remove any account or job posting |
+A modern, full-stack Campus Placement Management System built with **Spring Boot** and **Vanilla JavaScript**. This platform streamlines the recruitment process for colleges by connecting students with placement drives, managing applications, and providing AI-powered resume analysis.
 
 ---
 
-## Tech Stack
+## 🌟 Key Features
 
-| Layer | Technology |
-|-------|-----------|
-| Backend | Spring Boot 3.3, Spring Security (JWT), Spring Data JPA |
-| Database | MySQL 8 |
-| Frontend | Vanilla JS, Bootstrap 5.3 |
-| Auth | Stateless JWT (JJWT 0.12.6) |
-| File Storage | Local filesystem (configurable path) |
+### 🎓 For Students
+* **Automated Resume Analysis:** Upload your resume (PDF) and get instant feedback! The system parses your resume text, cross-references it with job descriptions, and provides an ATS score, missing keywords, and actionable suggestions.
+* **Placement Drives Dashboard:** Browse open placement drives, check eligibility criteria (Branch, CGPA), and apply with a single click.
+* **Application Tracking:** Real-time status tracking for all submitted applications (Applied, Shortlisted, Selected, Rejected).
 
----
-
-## Prerequisites
-
-- Java 21+
-- Maven 3.8+
-- MySQL 8 running locally
+### 🏢 For Administrators (Placement Cell)
+* **Company & Drive Management:** Post new placement drives, set eligibility criteria, and manage participating companies.
+* **Application Processing:** Review student applications, download resumes securely from the cloud, and update applicant statuses.
+* **Student Directory:** View registered students, their skills, CGPA, and academic details.
 
 ---
 
-## Setup (Local Development)
+## 🏗️ Architecture & Tech Stack
 
-### 1. Clone the repository
-```bash
-git clone <repo-url>
-cd campus-placement-system
-```
-
-### 2. Create the MySQL schema
-```sql
-CREATE DATABASE campus_placement_db;
-```
-
-### 3. Set environment variables
-
-The application reads sensitive values from environment variables — **never hardcode credentials**.
-
-**Windows (PowerShell):**
-```powershell
-$env:DB_PASSWORD = "your_mysql_password"
-$env:JWT_SECRET = "a-random-256-bit-base64-string-at-least-32-chars"
-$env:ADMIN_DEFAULT_PASSWORD = "SecureAdminPass@123"
-```
-
-**Linux/macOS:**
-```bash
-export DB_PASSWORD="your_mysql_password"
-export JWT_SECRET="a-random-256-bit-base64-string"
-export ADMIN_DEFAULT_PASSWORD="SecureAdminPass@123"
-```
-
-Or create a `.env` file (see `.env.example`) and source it.
-
-### 4. Run with the dev profile (enables SQL logging)
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-### 5. Open in browser
-```
-http://localhost:8080
-```
-- Default admin: `admin@campusplacement.com` / `<ADMIN_DEFAULT_PASSWORD>`
+* **Backend Framework:** Java 21, Spring Boot 3.3.4
+* **Security:** Spring Security with stateless JWT (JSON Web Token) authentication.
+* **Database:** MySQL (Hibernate / Spring Data JPA)
+* **Cloud Storage:** Cloudinary (for secure, permanent PDF resume storage).
+* **Frontend:** Vanilla HTML5, CSS3, JavaScript (Fetch API), Bootstrap 5.
+* **Resume Parsing:** Apache PDFBox for text extraction and dynamic analysis.
 
 ---
 
-## API Summary
+## 📸 Screenshots
 
-### Auth (public)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register (STUDENT or RECRUITER) |
-| POST | `/api/auth/login` | Login → returns JWT |
+*(Add your screenshots here! Just drag and drop images into this section on GitHub)*
 
-### Jobs (paginated, search)
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/jobs?keyword=&location=&page=0` | Public | Browse/search jobs |
-| POST | `/api/jobs` | Recruiter | Post a new job |
-| PUT | `/api/jobs/{id}` | Recruiter (owner) | Edit job |
-| DELETE | `/api/jobs/{id}` | Recruiter (owner) / Admin | Delete job |
-
-### Applications
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/applications/apply/{jobId}` | Student | Apply to a job |
-| GET | `/api/applications/my?page=0` | Student | My applications |
-| GET | `/api/applications/job/{jobId}?page=0` | Recruiter/Admin | Applicants list |
-| PUT | `/api/applications/{id}/status` | Recruiter/Admin | Update status |
-
-### Admin
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/stats` | Platform statistics |
-| GET/DELETE | `/api/admin/students/{id}` | List / remove student |
-| GET/DELETE | `/api/admin/recruiters/{id}` | List / remove recruiter |
-| GET/DELETE | `/api/admin/jobs/{id}` | List / remove job |
+1. **Student Dashboard & Resume Analysis**
+2. **Admin Dashboard**
+3. **Application Tracking**
 
 ---
 
-## Security Notes
+## 🚀 Local Setup Instructions
 
-- JWT tokens expire in **1 hour** (`jwt.expiration-ms=3600000`)
-- Passwords require 8+ characters with uppercase, lowercase, and digit
-- Resume files: PDF-only, 5 MB limit, magic-byte validated
-- All user-supplied HTML is escaped on the frontend to prevent XSS
-- Admin accounts are seeded at startup only — not self-registrable
+### Prerequisites
+* Java 21 or higher
+* Maven
+* MySQL Server (running on port 3306)
 
----
+### 1. Database Configuration
+Create a new MySQL database named `campus_placement_db`.
 
-## Running Tests
+### 2. Environment Variables
+You will need to set the following environment variables before running the application (or add them to an `.env` file):
 
 ```bash
-mvn test
+DB_PASSWORD="your_mysql_password"
+JWT_SECRET="your_secure_random_base64_string_for_tokens"
+ADMIN_DEFAULT_PASSWORD="your_secure_admin_password"
+CLOUDINARY_URL="cloudinary://<api_key>:<api_secret>@<cloud_name>"
 ```
+*(Note: You can get a free `CLOUDINARY_URL` by creating an account at [Cloudinary.com](https://cloudinary.com))*
+
+### 3. Build and Run
+Open your terminal in the project directory and run:
+
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+The application will start on `http://localhost:8080`. 
+
+### 4. Default Admin Login
+On startup, the system automatically seeds a default Admin account if one doesn't exist.
+* **Email:** `admin@campusplacement.com`
+* **Password:** *(Whatever you set as `ADMIN_DEFAULT_PASSWORD` in your environment variables)*
 
 ---
 
-## Environment Variables Reference
+## ☁️ Deployment
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `DB_URL` | No | `jdbc:mysql://localhost:3306/campus_placement_db?createDatabaseIfNotExist=true` | Full JDBC URL |
-| `DB_USERNAME` | No | `root` | MySQL username |
-| `DB_PASSWORD` | **Yes** | — | MySQL password |
-| `JWT_SECRET` | **Yes** | — | HMAC-SHA256 signing key (32+ chars) |
-| `ADMIN_DEFAULT_PASSWORD` | **Yes** (first run) | — | Initial admin account password |
+This application is ready to be deployed to platforms like **Render**, **Railway**, or **Heroku**.
+Because it uses Cloudinary for file storage, it is completely compatible with ephemeral file systems (like Render's free tier). Uploaded resumes will never be lost!
+
+---
+*Developed as a comprehensive project demonstrating full-stack development, cloud integration, and security best practices.*

@@ -89,6 +89,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Cloudinary for cloud file storage -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.36.0</version>
+        </dependency>
+
         <!-- PDFBox for reading text from resume PDFs -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
