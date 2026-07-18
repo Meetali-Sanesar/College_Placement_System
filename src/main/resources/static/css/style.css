@@ -1,0 +1,76 @@
+:root {
+  --brand: #4f46e5;
+  --brand-dark: #3730a3;
+  --bg: #f4f5f9;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--brand) !important;
+}
+
+.btn-primary {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-dark);
+  border-color: var(--brand-dark);
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.stat-card {
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.stat-card h3 { font-size: 2rem; font-weight: 700; margin: 0; }
+.stat-card p { margin: 0; opacity: 0.85; }
+
+.bg-purple { background: linear-gradient(135deg,#6366f1,#4f46e5); }
+.bg-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.bg-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.bg-coral  { background: linear-gradient(135deg,#f97066,#e4483c); }
+
+.job-card { border-left: 4px solid var(--brand); }
+
+.badge-status {
+  font-size: 0.75rem;
+  padding: 0.35em 0.7em;
+}
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 16px;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--brand);
+}
+
+#toastContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1080;
+}

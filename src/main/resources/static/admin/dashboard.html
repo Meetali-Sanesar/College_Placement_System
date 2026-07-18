@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Admin Placement Cell Dashboard — Manage students, companies, placement drives, and applications.">
+  <title>Admin Dashboard - Campus Placement System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <style>
+    .sidebar { min-height: 100vh; background: #1a1d23; color: #ccc; }
+    .sidebar .nav-link { color: #adb5bd; border-radius: 8px; margin: 2px 0; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #2d3748; color: #fff; }
+    .sidebar .brand { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .content-area { background: #f8fafc; min-height: 100vh; }
+    .tab-pane { display: none; } .tab-pane.active { display: block; }
+    .stat-card { border-radius: 12px; border: none; }
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  </style>
+</head>
+<body>
+<div class="d-flex">
+  <!-- Sidebar -->
+  <nav class="sidebar p-3" style="width:220px; min-width:220px;">
+    <div class="brand mb-4 px-2"><i class="bi bi-building-check me-2"></i>Placement Cell</div>
+    <ul class="nav flex-column gap-1">
+      <li><a class="nav-link" href="#" id="navStats" onclick="showTab('stats')"><i class="bi bi-grid me-2"></i>Dashboard</a></li>
+      <li><a class="nav-link" href="#" id="navStudents" onclick="showTab('students')"><i class="bi bi-people me-2"></i>Students</a></li>
+      <li><a class="nav-link" href="#" id="navCompanies" onclick="showTab('companies')"><i class="bi bi-building me-2"></i>Companies</a></li>
+      <li><a class="nav-link" href="#" id="navDrives" onclick="showTab('drives')"><i class="bi bi-briefcase me-2"></i>Drives</a></li>
+      <li><a class="nav-link" href="#" id="navApplications" onclick="showTab('applications')"><i class="bi bi-file-earmark-text me-2"></i>Applications</a></li>
+    </ul>
+    <div class="mt-auto pt-4">
+      <small class="text-muted d-block px-2 mb-2">Placement Cell Admin</small>
+      <a class="nav-link text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="content-area flex-grow-1 p-4">
+
+    <!-- ===== STATS TAB ===== -->
+    <div class="tab-pane active" id="tabStats">
+      <h2 class="h4 fw-bold mb-4"><i class="bi bi-grid me-2"></i>Dashboard Overview</h2>
+      <div id="statsContainer" class="row g-3 mb-4">
+        <p class="text-muted">Loading stats...</p>
+      </div>
+    </div>
+
+    <!-- ===== STUDENTS TAB ===== -->
+    <div class="tab-pane" id="tabStudents">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-people me-2"></i>Students</h2>
+        <div class="input-group" style="max-width:300px;">
+          <input type="text" class="form-control form-control-sm" id="studentSearch" placeholder="Search by name or email...">
+          <button class="btn btn-sm btn-outline-secondary" onclick="loadStudents()"><i class="bi bi-search"></i></button>
+        </div>
+      </div>
+      <div id="studentsContainer"><p class="text-muted">Loading...</p></div>
+    </div>
+
+    <!-- ===== COMPANIES TAB ===== -->
+    <div class="tab-pane" id="tabCompanies">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-building me-2"></i>Companies</h2>
+        <button class="btn btn-sm btn-primary" onclick="openCompanyModal()"><i class="bi bi-plus me-1"></i>Add Company</button>
+      </div>
+      <div id="companiesContainer"><p class="text-muted">Loading...</p></div>
+    </div>
+
+    <!-- ===== DRIVES TAB ===== -->
+    <div class="tab-pane" id="tabDrives">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0"><i class="bi bi-briefcase me-2"></i>Placement Drives</h2>
+        <button class="btn btn-sm btn-primary" onclick="openDriveModal()"><i class="bi bi-plus me-1"></i>Create Drive</button>
+      </div>
+      <div id="drivesContainer"><p class="text-muted">Loading...</p></div>
+    </div>
+
+    <!-- ===== APPLICATIONS TAB ===== -->
+    <div class="tab-pane" id="tabApplications">
+      <h2 class="h4 fw-bold mb-3"><i class="bi bi-file-earmark-text me-2"></i>All Applications</h2>
+      <div id="applicationsContainer"><p class="text-muted">Loading...</p></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Company Modal -->
+<div class="modal fade" id="companyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="companyModalTitle">Add Company</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="companyForm">
+        <div class="modal-body">
+          <input type="hidden" id="companyId">
+          <div class="mb-2"><label class="form-label">Company Name *</label><input class="form-control" id="cName" required></div>
+          <div class="mb-2"><label class="form-label">Industry</label><input class="form-control" id="cIndustry" placeholder="Technology, Finance, Manufacturing..."></div>
+          <div class="mb-2"><label class="form-label">Website</label><input class="form-control" id="cWebsite" type="url"></div>
+          <div class="mb-2"><label class="form-label">Location</label><input class="form-control" id="cLocation"></div>
+          <div class="mb-2"><label class="form-label">Contact Email</label><input class="form-control" id="cEmail" type="email"></div>
+          <div class="mb-2"><label class="form-label">Contact Phone</label><input class="form-control" id="cPhone"></div>
+          <div class="mb-2"><label class="form-label">Description</label><textarea class="form-control" id="cDesc" rows="3"></textarea></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveCompanyBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Drive Modal -->
+<div class="modal fade" id="driveModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="driveModalTitle">Create Placement Drive</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="driveForm">
+        <div class="modal-body">
+          <input type="hidden" id="driveId">
+          <div class="row g-2">
+            <div class="col-md-6"><label class="form-label">Company *</label>
+              <select class="form-select" id="dCompanyId" required><option value="">Select company...</option></select></div>
+            <div class="col-md-6"><label class="form-label">Job Role *</label><input class="form-control" id="dRole" required placeholder="Software Engineer, Analyst..."></div>
+            <div class="col-12"><label class="form-label">Description *</label><textarea class="form-control" id="dDesc" rows="3" required></textarea></div>
+            <div class="col-md-4"><label class="form-label">Min CGPA</label><input class="form-control" id="dCgpa" type="number" step="0.1" min="0" max="10" placeholder="Leave blank for none"></div>
+            <div class="col-md-8"><label class="form-label">Eligible Branches (comma-separated)</label><input class="form-control" id="dBranches" placeholder="CSE,ECE,IT — blank for all"></div>
+            <div class="col-md-4"><label class="form-label">Package (LPA)</label><input class="form-control" id="dPackage" type="number" step="0.1" min="0"></div>
+            <div class="col-md-4"><label class="form-label">Drive Date</label><input class="form-control" id="dDriveDate" type="date"></div>
+            <div class="col-md-4"><label class="form-label">Application Deadline</label><input class="form-control" id="dDeadline" type="date"></div>
+            <div class="col-md-6"><label class="form-label">Location</label><input class="form-control" id="dLocation"></div>
+            <div class="col-md-6"><label class="form-label">Status</label>
+              <select class="form-select" id="dStatus">
+                <option value="OPEN">Open</option>
+                <option value="UPCOMING">Upcoming</option>
+                <option value="CLOSED">Closed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveDriveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/api.js"></script>
+<script src="/admin/dashboard.js"></script>
+</body>
+</html>
