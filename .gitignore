@@ -66,3 +66,6 @@ Thumbs.db
 *.properties
 !application.properties
 application-dev.properties
+
+# Local credentials/notes — never commit this!
+College_Placeent_system_credentials_and_details
